@@ -28,23 +28,23 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_SUCCED = 1;
     private EditText etPath;
 
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-                case REQUEST_SUCCED:
-                    Bitmap bitmap = (Bitmap) msg.obj;
-                    iv.setImageBitmap(bitmap);
-                    break;
-                case REQUEST_FAIL:
-                    Toast.makeText(getApplicationContext(), "連線失敗", Toast.LENGTH_SHORT).show();
-                case REQUEST_EXCEPTION:
-                    Toast.makeText(getApplicationContext(), "忙碌中 請稍後", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
+//    @SuppressLint("HandlerLeak")
+//    private Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//
+//            switch (msg.what) {
+//                case REQUEST_SUCCED:
+//                    Bitmap bitmap = (Bitmap) msg.obj;
+//                    iv.setImageBitmap(bitmap);
+//                    break;
+//                case REQUEST_FAIL:
+//                    Toast.makeText(getApplicationContext(), "連線失敗", Toast.LENGTH_SHORT).show();
+//                case REQUEST_EXCEPTION:
+//                    Toast.makeText(getApplicationContext(), "忙碌中 請稍後", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    };
     private ImageView iv;
 
     @Override
@@ -69,10 +69,18 @@ public class MainActivity extends AppCompatActivity {
                 if (file.exists()) {
                     //[3]從緩存裡取圖片
                     System.out.println("使用緩存");
-                    Bitmap Cachebitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                    Message msg = Message.obtain();
-                    msg.obj = Cachebitmap;
-                    handler.sendMessage(msg);
+                    final Bitmap Cachebitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                iv.setImageBitmap(Cachebitmap);
+                            }
+                        });
+//                    Message msg = Message.obtain();
+//                    msg.obj = Cachebitmap;
+//                    handler.sendMessage(msg);
 
                 } else {
                     //[4]從網路上抓圖片
@@ -97,21 +105,29 @@ public class MainActivity extends AppCompatActivity {
                             fos.close();
                             is.close();
 
-                            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                            final Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
 
-                            Message msg = Message.obtain();
-                            msg.obj = bitmap;
-                            msg.what = REQUEST_SUCCED;
-                            handler.sendMessage(msg);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    iv.setImageBitmap(bitmap);
+                                }
+                            });
+
+
+//                            Message msg = Message.obtain();
+//                            msg.obj = bitmap;
+//                            msg.what = REQUEST_SUCCED;
+//                            handler.sendMessage(msg);
                         } else {
                             Message msg = Message.obtain();
                             msg.what = REQUEST_FAIL;
-                            handler.sendMessage(msg);
+//                            handler.sendMessage(msg);
                         }
                     } catch (Exception e) {
                         Message msg = Message.obtain();
                         msg.what = REQUEST_EXCEPTION;
-                        handler.sendMessage(msg);
+//                        handler.sendMessage(msg);
                         e.printStackTrace();
                     }
 
