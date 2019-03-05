@@ -15,7 +15,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="http://lh3.googleusercontent.com/eYEGH6KnlpC04ryM0LyiK2zwDNnDGaxbJwqhDMrXJ8IYCk3V-KeWzUjLFvo67vLK6BI=w500-h280-rw"
+        android:text="https://www.baidu.com/img/bd_logo1.png"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
